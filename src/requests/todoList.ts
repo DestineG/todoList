@@ -12,12 +12,21 @@ const getCurrentUserId = async (): Promise<string | null> => {
   return user?.id ?? null
 }
 
-// 查询当前用户的 todos
-export const getTodos = async () => {
+// 定义 Todo 类型
+export interface Todo {
+  user_id: string
+  title: string
+  completed: boolean
+  created_at: string
+  id: string
+}
+
+export const getTodos = async (): Promise<Todo[]> => {
   const userId = await getCurrentUserId()
   if (!userId) return []
+
   const { data, error } = await supabase
-    .from('todos')
+    .from('todos') // 不传泛型
     .select('*')
     .eq('user_id', userId)
 
@@ -25,7 +34,8 @@ export const getTodos = async () => {
     console.error('查询 todos 出错:', error.message)
     return []
   }
-  return data
+
+  return (data as Todo[]) || []
 }
 
 // 添加新的 todo
@@ -44,7 +54,7 @@ export const addTodo = async (title: string) => {
 }
 
 // 更新 todo 状态
-export const toggleTodo = async (id: number, completed: boolean) => {
+export const toggleTodo = async (id: string, completed: boolean) => {
   const { error } = await supabase
     .from('todos')
     .update({ completed })
@@ -54,7 +64,7 @@ export const toggleTodo = async (id: number, completed: boolean) => {
 }
 
 // 删除 todo
-export const deleteTodo = async (id: number) => {
+export const deleteTodo = async (id: string) => {
   const { error } = await supabase
     .from('todos')
     .delete()

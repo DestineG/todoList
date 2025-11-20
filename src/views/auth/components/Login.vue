@@ -13,6 +13,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { login, logout, user } from '@/requests/auth'
+import router from '@/router'
 
 const email = ref('')
 const password = ref('')
@@ -22,6 +23,7 @@ const doLogin = async () => {
   try {
     await login(email.value, password.value)
     message.value = '登录成功'
+    router.push({ name: 'home' })
   } catch (err: any) {
     message.value = '登录失败: ' + err.message
   }
