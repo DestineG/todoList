@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { supabase } from '@/requests/supabase'
 
 const routes = [
@@ -16,7 +16,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // 使用 Hash 模式，GitHub Pages 刷新不会 404
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 })
 
